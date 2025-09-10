@@ -1,6 +1,6 @@
 # Space Debris Risk Model
 
-This project models and visualizes close-approach events of space debris using a Python API and a Next.js web frontend.
+This project simulates and visualizes potential space debris close-approach events, powered by a FastAPI backend (Python) and a Next.js frontend (React). Deployment and additional features are in progress.
 
 ## Project Structure
 
@@ -95,4 +95,3 @@ cd space-debris-risk-model
 
 ## License
 
-Specify your license here (e.g., MIT, Apache 2.0, etc.)
