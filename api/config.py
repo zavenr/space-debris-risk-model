@@ -8,11 +8,11 @@ class Settings(BaseSettings):
     debug: bool = True
     log_level: str = "debug"
     
-    # API settings
-    api_host: str = "127.0.0.1"
-    api_port: int = 8000
+    # API settings - AWS compatible
+    api_host: str = "0.0.0.0"  # Changed: AWS containers need 0.0.0.0
+    api_port: int = int(os.getenv("PORT", 8000))  # Changed: AWS sets PORT env var
     
-    # CORS settings
+    # CORS settings - will add AWS URLs later
     cors_origins: str = "http://localhost:3000,http://localhost:3001,http://localhost:3002"
     
     @property
