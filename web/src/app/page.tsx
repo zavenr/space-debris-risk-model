@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-// If alias @/lib/config works for you, you can switch back to it
-import { API_BASE } from "../lib/config"; // ← keep relative for now
-import Events3D from "../components/Events3D"; // ← NEW
+import { API_BASE } from "../lib/config";
+import Events3D from "../components/Events3D";
 
 export default function Home() {
   const [health, setHealth] = useState<string>("(not checked yet)");
@@ -11,7 +10,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // NEW: 3D events state
+  // 3D events state
   const [events3d, setEvents3d] = useState<any[] | null>(null);
   const [eventsEarthR, setEventsEarthR] = useState<number | null>(null);
   const [loadingEvents, setLoadingEvents] = useState(false);
@@ -47,7 +46,7 @@ export default function Home() {
     }
   };
 
-  // NEW: fetch dummy 3D events
+  // fetch dummy 3D events
   const loadEvents3D = async () => {
     setLoadingEvents(true);
     setError(null);
@@ -66,30 +65,32 @@ export default function Home() {
   };
 
   return (
-    <main 
+    <main
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a)",
+        background:
+          "linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a)",
         color: "white",
-        fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif"
+        fontFamily:
+          "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif",
       }}
     >
-      <div 
+      <div
         style={{
           maxWidth: "1200px",
           margin: "0 auto",
-          padding: "32px 16px"
+          padding: "32px 16px",
         }}
       >
         <header style={{ textAlign: "center", marginBottom: "48px" }}>
-          <h1 
+          <h1
             style={{
               fontSize: "2.5rem",
               fontWeight: "bold",
               background: "linear-gradient(to right, #60a5fa, #2563eb)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              marginBottom: "16px"
+              marginBottom: "16px",
             }}
           >
             Space Debris Risk Model
@@ -99,12 +100,12 @@ export default function Home() {
           </p>
         </header>
 
-        <div 
+        <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
             gap: "24px",
-            marginBottom: "32px"
+            marginBottom: "32px",
           }}
         >
           {/* API Health Status Card */}
@@ -113,30 +114,32 @@ export default function Home() {
               background: "#1e293b",
               borderRadius: "12px",
               padding: "24px",
-              border: "1px solid #334155"
+              border: "1px solid #334155",
             }}
           >
-            <h2 
+            <h2
               style={{
                 fontSize: "1.25rem",
                 fontWeight: "600",
                 marginBottom: "16px",
                 display: "flex",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
-              <span 
+              <span
                 style={{
                   width: "12px",
                   height: "12px",
                   background: "#10b981",
                   borderRadius: "50%",
-                  marginRight: "12px"
+                  marginRight: "12px",
                 }}
               ></span>
               API Status
             </h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
               <button
                 onClick={checkHealth}
                 style={{
@@ -147,14 +150,20 @@ export default function Home() {
                   border: "none",
                   cursor: "pointer",
                   fontSize: "14px",
-                  fontWeight: "500"
+                  fontWeight: "500",
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.background = "#1d4ed8")}
-                onMouseOut={(e) => (e.currentTarget.style.background = "#2563eb")}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.background = "#1d4ed8")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.background = "#2563eb")
+                }
               >
                 Check Health
               </button>
-              <span style={{ color: "#94a3b8", fontSize: "14px" }}>Status: {health}</span>
+              <span style={{ color: "#94a3b8", fontSize: "14px" }}>
+                Status: {health}
+              </span>
             </div>
           </div>
 
@@ -164,19 +173,21 @@ export default function Home() {
               background: "#1e293b",
               borderRadius: "12px",
               padding: "24px",
-              border: "1px solid #334155"
+              border: "1px solid #334155",
             }}
           >
-            <h2 
+            <h2
               style={{
                 fontSize: "1.25rem",
                 fontWeight: "600",
-                marginBottom: "16px"
+                marginBottom: "16px",
               }}
             >
               Analysis Tools
             </h2>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            >
               <button
                 onClick={runSim}
                 disabled={loading}
@@ -192,10 +203,14 @@ export default function Home() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  opacity: loading ? 0.6 : 1
+                  opacity: loading ? 0.6 : 1,
                 }}
-                onMouseOver={(e) => !loading && (e.currentTarget.style.background = "#047857")}
-                onMouseOut={(e) => !loading && (e.currentTarget.style.background = "#059669")}
+                onMouseOver={(e) =>
+                  !loading && (e.currentTarget.style.background = "#047857")
+                }
+                onMouseOut={(e) =>
+                  !loading && (e.currentTarget.style.background = "#059669")
+                }
               >
                 {loading ? "Running Analysis..." : "Generate Risk Heatmap"}
               </button>
@@ -215,12 +230,20 @@ export default function Home() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  opacity: loadingEvents ? 0.6 : 1
+                  opacity: loadingEvents ? 0.6 : 1,
                 }}
-                onMouseOver={(e) => !loadingEvents && (e.currentTarget.style.background = "#1d4ed8")}
-                onMouseOut={(e) => !loadingEvents && (e.currentTarget.style.background = "#2563eb")}
+                onMouseOver={(e) =>
+                  !loadingEvents &&
+                  (e.currentTarget.style.background = "#1d4ed8")
+                }
+                onMouseOut={(e) =>
+                  !loadingEvents &&
+                  (e.currentTarget.style.background = "#2563eb")
+                }
               >
-                {loadingEvents ? "Loading Events..." : "Load 3D Close Approaches"}
+                {loadingEvents
+                  ? "Loading Events..."
+                  : "Load 3D Close Approaches"}
               </button>
             </div>
           </div>
@@ -237,7 +260,7 @@ export default function Home() {
               marginBottom: "24px",
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
           >
             <div style={{ display: "flex", alignItems: "center" }}>
@@ -251,7 +274,7 @@ export default function Home() {
                 border: "none",
                 color: "#fca5a5",
                 cursor: "pointer",
-                fontSize: "16px"
+                fontSize: "16px",
               }}
             >
               ×
@@ -267,7 +290,7 @@ export default function Home() {
               borderRadius: "12px",
               padding: "24px",
               border: "1px solid #334155",
-              marginBottom: "24px"
+              marginBottom: "24px",
             }}
           >
             <h3
@@ -275,7 +298,7 @@ export default function Home() {
                 fontSize: "1.25rem",
                 fontWeight: "600",
                 marginBottom: "16px",
-                color: "#10b981"
+                color: "#10b981",
               }}
             >
               Risk Analysis Results
@@ -285,14 +308,16 @@ export default function Home() {
                 background: "#0f172a",
                 borderRadius: "8px",
                 padding: "16px",
-                overflowX: "auto"
+                overflowX: "auto",
               }}
             >
               <pre style={{ color: "#86efac", fontSize: "14px", margin: 0 }}>
                 {JSON.stringify(simResult, null, 2)}
               </pre>
             </div>
-            <div style={{ marginTop: "16px", color: "#94a3b8", fontSize: "14px" }}>
+            <div
+              style={{ marginTop: "16px", color: "#94a3b8", fontSize: "14px" }}
+            >
               <p>
                 Event Count:{" "}
                 <span style={{ color: "white", fontWeight: "600" }}>
@@ -310,7 +335,7 @@ export default function Home() {
               background: "#1e293b",
               borderRadius: "12px",
               padding: "24px",
-              border: "1px solid #334155"
+              border: "1px solid #334155",
             }}
           >
             <h3
@@ -318,7 +343,7 @@ export default function Home() {
                 fontSize: "1.25rem",
                 fontWeight: "600",
                 marginBottom: "16px",
-                color: "#60a5fa"
+                color: "#60a5fa",
               }}
             >
               3D Close Approach Events
@@ -327,7 +352,7 @@ export default function Home() {
               style={{
                 background: "#0f172a",
                 borderRadius: "8px",
-                overflow: "hidden"
+                overflow: "hidden",
               }}
             >
               <Events3D events={events3d} earthRadiusKm={eventsEarthR} />
@@ -341,7 +366,7 @@ export default function Home() {
                 alignItems: window.innerWidth < 640 ? "flex-start" : "center",
                 gap: "12px",
                 color: "#94a3b8",
-                fontSize: "14px"
+                fontSize: "14px",
               }}
             >
               <p>
@@ -375,10 +400,14 @@ export default function Home() {
                   border: "none",
                   cursor: "pointer",
                   fontSize: "14px",
-                  fontWeight: "500"
+                  fontWeight: "500",
                 }}
-                onMouseOver={(e) => (e.currentTarget.style.background = "#b45309")}
-                onMouseOut={(e) => (e.currentTarget.style.background = "#d97706")}
+                onMouseOver={(e) =>
+                  (e.currentTarget.style.background = "#b45309")
+                }
+                onMouseOut={(e) =>
+                  (e.currentTarget.style.background = "#d97706")
+                }
               >
                 Download Data
               </button>
