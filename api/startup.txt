@@ -1,6 +1,54 @@
+#!/bin/bash
+
+# Space Debris Risk Model API Startup Script
+echo "🛰️  Starting Space Debris Risk Model API..."
+
+# Create and activate virtual environment
+echo "Setting up Python virtual environment..."
 python3 -m venv .venv
+
+# Check if virtual environment was created successfully
+if [ ! -d ".venv" ]; then
+    echo "❌ Failed to create virtual environment"
+    exit 1
+fi
+
 source .venv/bin/activate
 
-pip install -r requirements.txt
+# Check if activation was successful
+if [ -z "$VIRTUAL_ENV" ]; then
+    echo "❌ Failed to activate virtual environment"
+    exit 1
+fi
 
-uvicorn main:app --reload --port 8000
+echo "✅ Virtual environment activated: $VIRTUAL_ENV"
+
+# Install dependencies
+echo "Installing Python dependencies..."
+if pip install -r requirements.txt; then
+    echo "✅ Dependencies installed successfully"
+else
+    echo "❌ Failed to install dependencies"
+    exit 1
+fi
+
+# Set environment variables for development
+export ENVIRONMENT=development
+export DEBUG=true
+export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+
+# Check if .env file exists and source it
+if [ -f ".env" ]; then
+    echo "Loading environment variables from .env file..."
+    source .env
+fi
+
+# Start the API server
+echo "🚀 Starting FastAPI server..."
+echo "📡 API will be available at: http://localhost:8000"
+echo "📚 Interactive API docs at: http://localhost:8000/docs"
+echo "📋 ReDoc documentation at: http://localhost:8000/redoc"
+echo ""
+echo "Press Ctrl+C to stop the server"
+
+uvicorn main:app --reload --port 8000 --host 0.0.0.0
