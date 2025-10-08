@@ -19,13 +19,22 @@ cd space-debris-risk-model
 ### 2. API (Python)
 
 - Navigate to `api/`
-- Install dependencies:
+- **Quick Start (Cross-Platform):**
+
+  ```sh
+  # Windows
+  python startup.py
+  # or double-click startup.bat
+
+  # Mac/Linux
+  python3 startup.py
+  # or ./startup.sh
+  ```
+
+- **Manual Setup:**
   ```sh
   pip install -r requirements.txt
-  ```
-- Run the API:
-  ```sh
-  python main.py
+  python main.py  # or uvicorn main:app --reload
   ```
 
 ### 3. Web (Next.js)
@@ -56,20 +65,25 @@ cd space-debris-risk-model
      ```sh
      cd api
      ```
-   - (Optional but recommended) Create a virtual environment:
+   - **Automated Setup (Recommended):**
+
+     ```sh
+     # Windows
+     python startup.py
+
+     # Mac/Linux
+     python3 startup.py
+     ```
+
+     This automatically creates a virtual environment, installs dependencies, and starts the server.
+
+   - **Manual Setup:**
      ```sh
      python -m venv .venv
-     .venv\Scripts\activate  # On Windows
-     # or
-     source .venv/bin/activate  # On Mac/Linux
-     ```
-   - Install dependencies:
-     ```sh
+     .venv\Scripts\activate  # Windows
+     # source .venv/bin/activate  # Mac/Linux
      pip install -r requirements.txt
-     ```
-   - Run the API server:
-     ```sh
-     python main.py
+     uvicorn main:app --reload
      ```
 
 3. **Set up the Web Frontend:**
@@ -94,4 +108,3 @@ cd space-debris-risk-model
    - For deployment or production, see the respective `README.md` files in `api/` and `web/` (if present) for more details.
 
 ## License
-
