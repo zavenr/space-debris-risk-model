@@ -103,14 +103,18 @@ def main():
     
     # Start uvicorn
     try:
-        subprocess.run([uvicorn_cmd, "main:app", "--reload", "--port", "8000", "--host", "0.0.0.0"])
+        if is_windows:
+            # On Windows, use --reload-dir to avoid multiprocessing issues
+            subprocess.run([uvicorn_cmd, "main:app", "--reload", "--reload-dir", ".", "--port", "8000", "--host", "0.0.0.0"])
+        else:
+            subprocess.run([uvicorn_cmd, "main:app", "--reload", "--port", "8000", "--host", "0.0.0.0"])
     except KeyboardInterrupt:
         print_status("Server stopped by user")
     except FileNotFoundError:
         # Fallback to using python -m uvicorn
         try:
             if is_windows:
-                subprocess.run([".venv\\Scripts\\python", "-m", "uvicorn", "main:app", "--reload", "--port", "8000", "--host", "0.0.0.0"])
+                subprocess.run([".venv\\Scripts\\python", "-m", "uvicorn", "main:app", "--reload", "--reload-dir", ".", "--port", "8000", "--host", "0.0.0.0"])
             else:
                 subprocess.run([".venv/bin/python", "-m", "uvicorn", "main:app", "--reload", "--port", "8000", "--host", "0.0.0.0"])
         except KeyboardInterrupt:
