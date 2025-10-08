@@ -9,49 +9,6 @@ This project simulates and visualizes potential space debris close-approach even
 
 ## Getting Started
 
-### 1. Clone the repository
-
-```sh
-git clone <your-repo-url>
-cd space-debris-risk-model
-```
-
-### 2. API (Python)
-
-- Navigate to `api/`
-- **Quick Start (Cross-Platform):**
-
-  ```sh
-  # Windows
-  python startup.py
-  # or double-click startup.bat
-
-  # Mac/Linux
-  python3 startup.py
-  # or ./startup.sh
-  ```
-
-- **Manual Setup:**
-  ```sh
-  pip install -r requirements.txt
-  python main.py  # or uvicorn main:app --reload
-  ```
-
-### 3. Web (Next.js)
-
-- Navigate to `web/`
-- Install dependencies:
-  ```sh
-  npm install
-  ```
-- Run the development server:
-  ```sh
-  npm run dev
-  ```
-- Visit [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Quick Start for Contributors
-
 1. **Clone the repository:**
 
    ```sh
