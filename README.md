@@ -1,97 +1,57 @@
 # Space Debris Risk Model
 
-This project simulates and visualizes potential space debris close-approach events, powered by a FastAPI backend (Python) and a Next.js frontend (React). Deployment and additional features are in progress.
+A simple full-stack app to learn about space debris visualization. Built with FastAPI (Python) and Next.js (React).
 
-## Project Structure
+## Features
 
-- `api/` — Python backend for data processing and serving APIs
-- `web/` — Next.js frontend for 3D visualization and UI
+- 🛰️ **Risk Heatmap**: Visualize collision risk by altitude and inclination
+- 🌍 **3D Visualization**: Interactive 3D view of close-approach events
+- 📊 **Simple API**: Clean REST endpoints for data
 
-## Getting Started
+## Quick Start
 
-### 1. Clone the repository
+### 1. Backend (Python API)
 
-```sh
-git clone <your-repo-url>
-cd space-debris-risk-model
+```bash
+cd api
+pip install -r requirements.txt
+python main.py
 ```
 
-### 2. API (Python)
+API runs at: http://localhost:8000  
+API docs at: http://localhost:8000/docs
 
-- Navigate to `api/`
-- Install dependencies:
-  ```sh
-  pip install -r requirements.txt
-  ```
-- Run the API:
-  ```sh
-  python main.py
-  ```
+### 2. Frontend (Next.js)
 
-### 3. Web (Next.js)
+```bash
+cd web
+npm install
+npm run dev
+```
 
-- Navigate to `web/`
-- Install dependencies:
-  ```sh
-  npm install
-  ```
-- Run the development server:
-  ```sh
-  npm run dev
-  ```
-- Visit [http://localhost:3000](http://localhost:3000) in your browser.
+## API Endpoints
 
-## Quick Start for Contributors
+- `GET /health` - Check if API is running
+- `POST /simulate` - Generate risk heatmap
+- `GET /events` - Get 3D close-approach events
 
-1. **Clone the repository:**
+## What You Can Learn
 
-   ```sh
-   git clone <your-repo-url>
-   cd space-debris-risk-model
-   ```
+- FastAPI basics and REST APIs
+- React hooks and state management
+- 3D visualization with Plotly
+- Full-stack data flow
+- TypeScript and Python typing
 
-2. **Set up the Python API:**
+## Next Steps
 
-   - Go to the `api` folder:
-     ```sh
-     cd api
-     ```
-   - (Optional but recommended) Create a virtual environment:
-     ```sh
-     python -m venv .venv
-     .venv\Scripts\activate  # On Windows
-     # or
-     source .venv/bin/activate  # On Mac/Linux
-     ```
-   - Install dependencies:
-     ```sh
-     pip install -r requirements.txt
-     ```
-   - Run the API server:
-     ```sh
-     python main.py
-     ```
+Want to expand? Try:
 
-3. **Set up the Web Frontend:**
-
-   - Open a new terminal and go to the `web` folder:
-     ```sh
-     cd web
-     ```
-   - Install dependencies:
-     ```sh
-     npm install
-     ```
-   - Start the development server:
-     ```sh
-     npm run dev
-     ```
-   - Visit [http://localhost:3000](http://localhost:3000) in your browser.
-
-4. **Notes:**
-   - The `.gitignore` is set up to avoid committing dependencies, build artifacts, and environment files for both Python and Node.js.
-   - The API will be available at [http://localhost:8000](http://localhost:8000) by default.
-   - For deployment or production, see the respective `README.md` files in `api/` and `web/` (if present) for more details.
+- Add real orbital mechanics calculations
+- Integrate with Space-Track.org API for real debris data
+- Add more visualization options
+- Create user-defined scenarios
 
 ## License
 
+MIT - Learn and experiment freely!

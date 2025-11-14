@@ -3,14 +3,13 @@
 import { useState } from "react";
 import { API_BASE } from "../lib/config";
 import Events3D from "../components/Events3D";
+import Heatmap from "../components/Heatmap";
 
 export default function Home() {
   const [health, setHealth] = useState<string>("(not checked yet)");
   const [simResult, setSimResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // 3D events state
   const [events3d, setEvents3d] = useState<any[] | null>(null);
   const [eventsEarthR, setEventsEarthR] = useState<number | null>(null);
   const [loadingEvents, setLoadingEvents] = useState(false);
@@ -46,7 +45,6 @@ export default function Home() {
     }
   };
 
-  // fetch dummy 3D events
   const loadEvents3D = async () => {
     setLoadingEvents(true);
     setError(null);
@@ -76,11 +74,7 @@ export default function Home() {
       }}
     >
       <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "32px 16px",
-        }}
+        style={{ maxWidth: "1200px", margin: "0 auto", padding: "32px 16px" }}
       >
         <header style={{ textAlign: "center", marginBottom: "48px" }}>
           <h1
@@ -95,9 +89,36 @@ export default function Home() {
           >
             Space Debris Risk Model
           </h1>
-          <p style={{ color: "#94a3b8", fontSize: "1.125rem" }}>
-            Advanced orbital collision risk analysis and visualization
+          <p
+            style={{
+              color: "#94a3b8",
+              fontSize: "1.125rem",
+              marginBottom: "24px",
+            }}
+          >
+            Visualize space debris and collision risks in Earth orbit
           </p>
+          <div
+            style={{
+              background: "rgba(59, 130, 246, 0.1)",
+              border: "1px solid rgba(59, 130, 246, 0.3)",
+              borderRadius: "8px",
+              padding: "16px",
+              maxWidth: "600px",
+              margin: "0 auto",
+              fontSize: "14px",
+              color: "#cbd5e1",
+            }}
+          >
+            <p style={{ marginBottom: "8px" }}>
+              📊 <strong>Heatmap</strong> shows debris density by altitude and
+              orbital angle
+            </p>
+            <p>
+              🌍 <strong>3D View</strong> displays actual positions of debris
+              around Earth
+            </p>
+          </div>
         </header>
 
         <div
@@ -108,7 +129,7 @@ export default function Home() {
             marginBottom: "32px",
           }}
         >
-          {/* API Health Status Card */}
+          {/* API Health Status */}
           <div
             style={{
               background: "#1e293b",
@@ -122,52 +143,31 @@ export default function Home() {
                 fontSize: "1.25rem",
                 fontWeight: "600",
                 marginBottom: "16px",
-                display: "flex",
-                alignItems: "center",
               }}
             >
-              <span
-                style={{
-                  width: "12px",
-                  height: "12px",
-                  background: "#10b981",
-                  borderRadius: "50%",
-                  marginRight: "12px",
-                }}
-              ></span>
               API Status
             </h2>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            <button
+              onClick={checkHealth}
+              style={{
+                background: "#2563eb",
+                color: "white",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "14px",
+                fontWeight: "500",
+                width: "100%",
+                marginBottom: "12px",
+              }}
             >
-              <button
-                onClick={checkHealth}
-                style={{
-                  background: "#2563eb",
-                  color: "white",
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.background = "#1d4ed8")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.background = "#2563eb")
-                }
-              >
-                Check Health
-              </button>
-              <span style={{ color: "#94a3b8", fontSize: "14px" }}>
-                Status: {health}
-              </span>
-            </div>
+              Check Health
+            </button>
+            <span style={{ color: "#94a3b8", fontSize: "14px" }}>{health}</span>
           </div>
 
-          {/* Actions Card */}
+          {/* Actions */}
           <div
             style={{
               background: "#1e293b",
@@ -185,67 +185,43 @@ export default function Home() {
             >
               Analysis Tools
             </h2>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+            <button
+              onClick={runSim}
+              disabled={loading}
+              style={{
+                background: loading ? "#475569" : "#059669",
+                color: "white",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: loading ? "not-allowed" : "pointer",
+                fontSize: "14px",
+                fontWeight: "500",
+                width: "100%",
+                marginBottom: "12px",
+                opacity: loading ? 0.6 : 1,
+              }}
             >
-              <button
-                onClick={runSim}
-                disabled={loading}
-                style={{
-                  background: loading ? "#475569" : "#059669",
-                  color: "white",
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  border: "none",
-                  cursor: loading ? "not-allowed" : "pointer",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  opacity: loading ? 0.6 : 1,
-                }}
-                onMouseOver={(e) =>
-                  !loading && (e.currentTarget.style.background = "#047857")
-                }
-                onMouseOut={(e) =>
-                  !loading && (e.currentTarget.style.background = "#059669")
-                }
-              >
-                {loading ? "Running Analysis..." : "Generate Risk Heatmap"}
-              </button>
-
-              <button
-                onClick={loadEvents3D}
-                disabled={loadingEvents}
-                style={{
-                  background: loadingEvents ? "#475569" : "#2563eb",
-                  color: "white",
-                  padding: "8px 16px",
-                  borderRadius: "8px",
-                  border: "none",
-                  cursor: loadingEvents ? "not-allowed" : "pointer",
-                  fontSize: "14px",
-                  fontWeight: "500",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  opacity: loadingEvents ? 0.6 : 1,
-                }}
-                onMouseOver={(e) =>
-                  !loadingEvents &&
-                  (e.currentTarget.style.background = "#1d4ed8")
-                }
-                onMouseOut={(e) =>
-                  !loadingEvents &&
-                  (e.currentTarget.style.background = "#2563eb")
-                }
-              >
-                {loadingEvents
-                  ? "Loading Events..."
-                  : "Load 3D Close Approaches"}
-              </button>
-            </div>
+              {loading ? "Running..." : "Generate Risk Heatmap"}
+            </button>
+            <button
+              onClick={loadEvents3D}
+              disabled={loadingEvents}
+              style={{
+                background: loadingEvents ? "#475569" : "#2563eb",
+                color: "white",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: loadingEvents ? "not-allowed" : "pointer",
+                fontSize: "14px",
+                fontWeight: "500",
+                width: "100%",
+                opacity: loadingEvents ? 0.6 : 1,
+              }}
+            >
+              {loadingEvents ? "Loading..." : "Load 3D Events"}
+            </button>
           </div>
         </div>
 
@@ -258,31 +234,14 @@ export default function Home() {
               borderRadius: "12px",
               padding: "16px",
               marginBottom: "24px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
+              color: "#fca5a5",
             }}
           >
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <span style={{ color: "#fca5a5", marginRight: "12px" }}>⚠</span>
-              <span style={{ color: "#fca5a5" }}>Error: {error}</span>
-            </div>
-            <button
-              onClick={() => setError(null)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#fca5a5",
-                cursor: "pointer",
-                fontSize: "16px",
-              }}
-            >
-              ×
-            </button>
+            ⚠ Error: {error}
           </div>
         )}
 
-        {/* Simulation Results */}
+        {/* Heatmap Visualization */}
         {simResult && (
           <div
             style={{
@@ -293,35 +252,51 @@ export default function Home() {
               marginBottom: "24px",
             }}
           >
-            <h3
-              style={{
-                fontSize: "1.25rem",
-                fontWeight: "600",
-                marginBottom: "16px",
-                color: "#10b981",
-              }}
-            >
-              Risk Analysis Results
-            </h3>
+            <div style={{ marginBottom: "16px" }}>
+              <h3
+                style={{
+                  fontSize: "1.25rem",
+                  fontWeight: "600",
+                  color: "#10b981",
+                  marginBottom: "8px",
+                }}
+              >
+                Collision Risk Heatmap
+              </h3>
+              <p style={{ color: "#94a3b8", fontSize: "14px" }}>
+                Shows where space debris is most concentrated. Red/orange zones
+                have high collision risk. The 600-800km altitude range (Low
+                Earth Orbit) is the most crowded.
+              </p>
+            </div>
             <div
               style={{
                 background: "#0f172a",
                 borderRadius: "8px",
                 padding: "16px",
-                overflowX: "auto",
               }}
             >
-              <pre style={{ color: "#86efac", fontSize: "14px", margin: 0 }}>
-                {JSON.stringify(simResult, null, 2)}
-              </pre>
+              <Heatmap data={simResult.heatmap} />
             </div>
             <div
-              style={{ marginTop: "16px", color: "#94a3b8", fontSize: "14px" }}
+              style={{
+                marginTop: "16px",
+                display: "flex",
+                gap: "24px",
+                color: "#94a3b8",
+                fontSize: "14px",
+              }}
             >
               <p>
-                Event Count:{" "}
+                Total Debris Objects:{" "}
                 <span style={{ color: "white", fontWeight: "600" }}>
                   {simResult.event_count}
+                </span>
+              </p>
+              <p>
+                Highest Risk:{" "}
+                <span style={{ color: "#dc2626", fontWeight: "600" }}>
+                  600-800km @ 60-90°
                 </span>
               </p>
             </div>
@@ -338,16 +313,23 @@ export default function Home() {
               border: "1px solid #334155",
             }}
           >
-            <h3
-              style={{
-                fontSize: "1.25rem",
-                fontWeight: "600",
-                marginBottom: "16px",
-                color: "#60a5fa",
-              }}
-            >
-              3D Close Approach Events
-            </h3>
+            <div style={{ marginBottom: "16px" }}>
+              <h3
+                style={{
+                  fontSize: "1.25rem",
+                  fontWeight: "600",
+                  color: "#60a5fa",
+                  marginBottom: "8px",
+                }}
+              >
+                3D Orbital Debris Positions
+              </h3>
+              <p style={{ color: "#94a3b8", fontSize: "14px" }}>
+                Each red dot represents a potential collision point in space.
+                The blue sphere is Earth. Debris is shown in Earth-Centered
+                Inertial (ECI) coordinates. Rotate to explore!
+              </p>
+            </div>
             <div
               style={{
                 background: "#0f172a",
@@ -361,20 +343,23 @@ export default function Home() {
               style={{
                 marginTop: "16px",
                 display: "flex",
-                flexDirection: window.innerWidth < 640 ? "column" : "row",
                 justifyContent: "space-between",
-                alignItems: window.innerWidth < 640 ? "flex-start" : "center",
+                alignItems: "center",
+                flexWrap: "wrap",
                 gap: "12px",
-                color: "#94a3b8",
-                fontSize: "14px",
               }}
             >
-              <p>
-                Total Events:{" "}
-                <span style={{ color: "white", fontWeight: "600" }}>
-                  {events3d.length}
-                </span>
-              </p>
+              <div style={{ color: "#94a3b8", fontSize: "14px" }}>
+                <p>
+                  Tracked Objects:{" "}
+                  <span style={{ color: "white", fontWeight: "600" }}>
+                    {events3d.length}
+                  </span>
+                </p>
+                <p style={{ marginTop: "4px", fontSize: "12px" }}>
+                  Avg. relative velocity: ~10 km/s
+                </p>
+              </div>
               <button
                 onClick={() => {
                   const dataStr = JSON.stringify(
@@ -402,75 +387,6 @@ export default function Home() {
                   fontSize: "14px",
                   fontWeight: "500",
                 }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.background = "#b45309")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.background = "#d97706")
-                }
-              >
-                Download Data
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Simulation Results */}
-        {simResult && (
-          <div className="bg-dark-800 rounded-lg p-6 border border-dark-700 mb-6">
-            <h3 className="text-xl font-semibold mb-4 text-green-400">
-              Risk Analysis Results
-            </h3>
-            <div className="bg-dark-900 rounded-lg p-4 overflow-x-auto">
-              <pre className="text-green-300 text-sm">
-                {JSON.stringify(simResult, null, 2)}
-              </pre>
-            </div>
-            <div className="mt-4 text-dark-300">
-              <p>
-                Event Count:{" "}
-                <span className="text-white font-semibold">
-                  {simResult.event_count}
-                </span>
-              </p>
-            </div>
-          </div>
-        )}
-
-        {/* 3D Visualization */}
-        {events3d && eventsEarthR && (
-          <div className="bg-dark-800 rounded-lg p-6 border border-dark-700">
-            <h3 className="text-xl font-semibold mb-4 text-blue-400">
-              3D Close Approach Events
-            </h3>
-            <div className="rounded-lg overflow-hidden bg-dark-900">
-              <Events3D events={events3d} earthRadiusKm={eventsEarthR} />
-            </div>
-            <div className="mt-4 flex justify-between items-center text-dark-300">
-              <p>
-                Total Events:{" "}
-                <span className="text-white font-semibold">
-                  {events3d.length}
-                </span>
-              </p>
-              <button
-                onClick={() => {
-                  const dataStr = JSON.stringify(
-                    { events: events3d, earth_radius_km: eventsEarthR },
-                    null,
-                    2
-                  );
-                  const dataBlob = new Blob([dataStr], {
-                    type: "application/json",
-                  });
-                  const url = URL.createObjectURL(dataBlob);
-                  const link = document.createElement("a");
-                  link.href = url;
-                  link.download = "space-debris-events.json";
-                  link.click();
-                  URL.revokeObjectURL(url);
-                }}
-                className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm transition-colors"
               >
                 Download Data
               </button>
