@@ -1,6 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
 import { useState } from "react";
+import type { Config, Data, Layout } from "plotly.js";
 
 // Plotly must render client-side in Next.js App Router
 const Plot = dynamic(() => import("react-plotly.js"), { ssr: false });
@@ -49,54 +50,88 @@ function makeEarthSphere(r: number) {
 export default function Events3D({ events, earthRadiusKm = 6378.137 }: Props) {
   const [showEarth, setShowEarth] = useState(true);
   const [colorBy, setColorBy] = useState<"velocity" | "time">("velocity");
+  const [plotKey, setPlotKey] = useState(0);
 
   const x = events.map((e) => e.x);
   const y = events.map((e) => e.y);
   const z = events.map((e) => e.z);
   const color = events.map((e) =>
-    colorBy === "velocity" ? e.vrel_km_s : e.time_s
+    colorBy === "velocity" ? e.vrel_km_s : e.time_s,
   );
   const text = events.map(
-    (e) => `t=${e.time_s}s<br>v=${e.vrel_km_s.toFixed(2)} km/s`
+    (e) => `t=${e.time_s}s<br>v=${e.vrel_km_s.toFixed(2)} km/s`,
   );
 
   const earth = makeEarthSphere(earthRadiusKm);
 
-  const plotData: any[] = [
-    ...(showEarth
-      ? [
-          {
-            type: "surface",
-            x: earth.xs,
-            y: earth.ys,
-            z: earth.zs,
-            showscale: false,
-            opacity: 0.15,
-            contours: { z: { show: false } },
-            name: "Earth",
-            hoverinfo: "skip",
-          },
-        ]
-      : []),
-    {
-      type: "scatter3d",
-      mode: "markers",
-      x,
-      y,
-      z,
-      text,
-      hoverinfo: "text",
-      name: "Events",
-      marker: {
-        size: 4,
-        color,
-        colorscale: colorBy === "velocity" ? "Hot" : "Viridis",
-        colorbar: {
-          title: colorBy === "velocity" ? "Velocity (km/s)" : "Time (s)",
+  const earthTrace = {
+    type: "surface" as const,
+    x: earth.xs,
+    y: earth.ys,
+    z: earth.zs,
+    showscale: false,
+    opacity: 0.15,
+    contours: { z: { show: false } },
+    name: "Earth",
+    hoverinfo: "skip" as const,
+  } as Data;
+
+  const eventTrace = {
+    type: "scatter3d" as const,
+    mode: "markers" as const,
+    x,
+    y,
+    z,
+    text,
+    hoverinfo: "text" as const,
+    name: "Events",
+    marker: {
+      size: 4,
+      color,
+      colorscale: colorBy === "velocity" ? "Hot" : "Viridis",
+      colorbar: {
+        title: {
+          text: colorBy === "velocity" ? "Velocity (km/s)" : "Time (s)",
         },
       },
     },
-  ];
+  } as Data;
+
+  const plotData: Data[] = [...(showEarth ? [earthTrace] : []), eventTrace];
+
+  const layout: Partial<Layout> = {
+    title: { text: "Close-Approach Events (3D ECI)" },
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    font: { color: "white" },
+    scene: {
+      xaxis: {
+        title: { text: "X (km)" },
+        gridcolor: "rgb(100,100,100)",
+        color: "white",
+      },
+      yaxis: {
+        title: { text: "Y (km)" },
+        gridcolor: "rgb(100,100,100)",
+        color: "white",
+      },
+      zaxis: {
+        title: { text: "Z (km)" },
+        gridcolor: "rgb(100,100,100)",
+        color: "white",
+      },
+      aspectmode: "data",
+      bgcolor: "rgba(0,0,0,0)",
+    },
+    margin: { l: 0, r: 0, t: 40, b: 0 },
+    autosize: true,
+  };
+
+  const config: Partial<Config> = {
+    displayModeBar: true,
+    displaylogo: false,
+    modeBarButtonsToRemove: ["pan2d", "select2d", "lasso2d"],
+  };
 
   return (
     <div>
@@ -151,15 +186,7 @@ export default function Events3D({ events, earthRadiusKm = 6378.137 }: Props) {
         </div>
 
         <button
-          onClick={() => {
-            // This will reset the camera view
-            const plotDiv = document.querySelector(".js-plotly-plot") as any;
-            if (plotDiv && plotDiv.layout) {
-              const newLayout = { ...plotDiv.layout };
-              delete newLayout.scene.camera;
-              (window as any).Plotly.relayout(plotDiv, newLayout);
-            }
-          }}
+          onClick={() => setPlotKey((current) => current + 1)}
           style={{
             background: "#2563eb",
             color: "white",
@@ -178,44 +205,13 @@ export default function Events3D({ events, earthRadiusKm = 6378.137 }: Props) {
       </div>
 
       <Plot
+        key={plotKey}
         data={plotData}
-        layout={
-          {
-            title: "Close-Approach Events (3D ECI)",
-            paper_bgcolor: "rgba(0,0,0,0)",
-            plot_bgcolor: "rgba(0,0,0,0)",
-            font: { color: "white" },
-            scene: {
-              xaxis: {
-                title: "X (km)",
-                gridcolor: "rgb(100,100,100)",
-                color: "white",
-              },
-              yaxis: {
-                title: "Y (km)",
-                gridcolor: "rgb(100,100,100)",
-                color: "white",
-              },
-              zaxis: {
-                title: "Z (km)",
-                gridcolor: "rgb(100,100,100)",
-                color: "white",
-              },
-              aspectmode: "data",
-              bgcolor: "rgba(0,0,0,0)",
-            },
-            margin: { l: 0, r: 0, t: 40, b: 0 },
-            autosize: true,
-          } as any
-        }
+        layout={layout}
         style={{ width: "100%", height: "420px" }}
         className="md:!h-[520px]"
         useResizeHandler
-        config={{
-          displayModeBar: true,
-          displaylogo: false,
-          modeBarButtonsToRemove: ["pan2d", "select2d", "lasso2d"],
-        }}
+        config={config}
       />
     </div>
   );
